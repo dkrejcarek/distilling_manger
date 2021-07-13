@@ -1,4 +1,8 @@
+import shelve
 from batch import Batch
+
+db = shelve.open("batches")
+current_batch = ""
 
 
 def create_new_instance():
@@ -55,3 +59,10 @@ def is_current_batch(current_batch: str, dbs):
     else:
         return current_batch
 
+
+def edit_batch_info(current_batch: str, dbs):
+    current_batch = is_current_batch(current_batch, dbs)
+    temp = dbs[current_batch]
+    temp.update_final_gravity()
+    dbs[current_batch] = temp
+    print(dbs[current_batch].final_gravity)
