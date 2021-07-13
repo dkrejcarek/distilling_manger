@@ -89,3 +89,4 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
             total_alc_collected += self.run[i][0] * (self.run[i][1] / 100)
 
         return total_collected, total_alc_collected, total_alc
+
