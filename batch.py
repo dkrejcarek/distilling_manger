@@ -1,7 +1,6 @@
 import shelve
 
 
-
 class Batch(object):
     """ Batch of distillate class """
 
@@ -27,8 +26,8 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
                         total_collected,
                         total_alc))
 
-    def save_data(self):
-        db = shelve.open("batches", 'w')
+    def save_data(self, location):
+        db = shelve.open(location)
         name = self.style + '_' + self.date
         db[name] = self
         db.close()

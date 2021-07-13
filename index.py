@@ -1,8 +1,18 @@
 import tkinter as tk
 from app import App
 
-root = tk.Tk()
+# root = tk.Tk()
 
-app = App(root)
+# app = App(root)
 
-root.mainloop()
+# root.mainloop()
+
+
+def main():
+    root = tk.Tk()
+    App(root)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
