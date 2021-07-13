@@ -31,9 +31,6 @@ while True:
 
     if selection == '0':
         break
-    elif selection == '1':
-        batch = f.create_new_instance()
-        db[batch[0]] = batch[1]
     elif selection == '2':
         current_batch = f.open_batch(db)
 

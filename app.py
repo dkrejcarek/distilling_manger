@@ -1,12 +1,11 @@
 import tkinter as tk
-from functools import partial
+from batch import Batch
 
 HEIGHT = 500
 WIDTH = 600
 
 
 class App:
-
     def __init__(self, master):
         self.master = master
         self.master.title("Distilling manager")
@@ -35,37 +34,44 @@ class App:
     def new_batch(self):
         new_batch_label = tk.Label(self.ui_frame,
                                    text='Please enter New Batch info')
-        new_batch_label.grid(row=0, column=0)
+        new_batch_label.grid(row=0, column=0, sticky='news')
 
         date_label = tk.Label(self.ui_frame,
                               text='Date: ')
-        date_label.grid(row=1, column=0)
+        date_label.grid(row=1, column=0, sticky='ns')
         date_input = tk.Entry(self.ui_frame)
-        date_input.grid(row=1, column=1)
+        date_input.grid(row=1, column=1, sticky='ns')
 
-        type_label = tk.Label(self.ui_frame,
-                              text='Type: ')
-        type_label.grid(row=1, column=2)
-        type_input = tk.Entry(self.ui_frame)
-        type_input.grid(row=1, column=3)
+        style_label = tk.Label(self.ui_frame,
+                               text='Type: ')
+        style_label.grid(row=2, column=0, sticky='ns')
+        style_input = tk.Entry(self.ui_frame)
+        style_input.grid(row=2, column=1, sticky='ns')
 
         original_gravity_label = tk.Label(self.ui_frame,
                                           text="OG: ")
-        original_gravity_label.grid(row=1, column=4)
-        original_gravity_input = tk.Entry(self.ui_frame,
-                                          insert='1.xxx')
-        original_gravity_input.grid(row=1, column=5)
+        original_gravity_label.grid(row=3, column=0, sticky='ns')
+        original_gravity_input = tk.Entry(self.ui_frame)
+        original_gravity_input.grid(row=3, column=1, sticky='ns')
+
+        volume_label = tk.Label(self.ui_frame,
+                                text='Vol (L)')
+        volume_label.grid(row=4, column=0, sticky='ns')
+        volume_input = tk.Entry(self.ui_frame)
+        volume_input.grid(row=4, column=1, sticky='ns')
 
         enter_button = tk.Button(self.ui_frame,
                                  text='Enter',
                                  command=lambda: self.save_data(date_input.get(),
-                                                                type_input.get(),
-                                                                original_gravity_input.get()))
-        enter_button.grid(row=2, column=0)
+                                                                style_input.get(),
+                                                                original_gravity_input.get(),
+                                                                volume_input.get()))
+        enter_button.grid(row=5, column=0, columnspan=2, sticky='news')
 
-    def save_data(self, date, batch_type, original_gravity):
-        print('Data Saved')
-        print(date, batch_type, original_gravity)
+    def save_data(self, date, style, og, vol):
+        batch = Batch(style, date, float(og), float(vol))
+        batch.save_data()
+        print(batch)
 
         for widget in self.ui_frame.winfo_children():
             widget.destroy()
