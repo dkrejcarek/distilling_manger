@@ -1,3 +1,6 @@
+import shelve
+
+
 
 class Batch(object):
     """ Batch of distillate class """
@@ -23,6 +26,12 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
                         total_collected,
                         total_collected,
                         total_alc))
+
+    def save_data(self):
+        db = shelve.open("batches", 'w')
+        name = self.style + '_' + self.date
+        db[name] = self
+        db.close()
 
     def update_final_gravity(self):
         """
@@ -89,3 +98,4 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
             total_alc_collected += self.run[i][0] * (self.run[i][1] / 100)
 
         return total_collected, total_alc_collected, total_alc
+
