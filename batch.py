@@ -26,7 +26,7 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
                         total_collected,
                         total_alc))
 
-    def save_data(self, location):
+    def save_data(self, location, *a):
         db = shelve.open(location)
         name = self.style + '_' + self.date
         db[name] = self

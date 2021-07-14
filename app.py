@@ -9,6 +9,8 @@ WIDTH = 600
 class App:
     current_batch = ''
     DATABASE = 'batches.db'
+    FONT_TITLE_1 = 24
+    FONT_TITLE_2 = 16
 
     def __init__(self, master):
         self.master = master
@@ -25,7 +27,7 @@ class App:
         self.title_label = tk.Label(self.title_frame,
                                     text='Distilling Batch Manager',
                                     bg='white',
-                                    font=15)
+                                    font=self.FONT_TITLE_1)
         self.title_label.grid(row=0, column=0, pady=10)
 
         self.new_batch_btn = tk.Button(self.button_frame, text='New Batch',
@@ -38,12 +40,14 @@ class App:
         self.close_button = tk.Button(self.button_frame,
                                       text="Exit",
                                       command=master.quit)
-        self.close_button.grid(row=2, column=0)
+        self.close_button.grid(row=0, column=2)
 
     def new_batch(self):
+        self.close_frame(self.ui_frame)
         new_batch_label = tk.Label(self.ui_frame,
                                    text='Please enter New Batch info',
-                                   bg='white')
+                                   bg='white',
+                                   font=self.FONT_TITLE_2)
         new_batch_label.grid(row=0, column=0, sticky='news')
 
         date_label = tk.Label(self.ui_frame,
@@ -82,16 +86,20 @@ class App:
                                  padx=30, pady=5)
         enter_button.grid(row=5, column=0, columnspan=2,
                           padx=10, pady=10)
+        close_btn = tk.Button(self.ui_frame,
+                              text="Close",
+                              command=lambda: self.close_frame(self.ui_frame))
+        close_btn.grid(row=5, column=1)
 
     def save_data(self, date, style, og, vol):
         batch = Batch(style, date, float(og), float(vol))
         batch.save_data(self.DATABASE)
         print(batch)
 
-        for widget in self.ui_frame.winfo_children():
-            widget.destroy()
+        self.close_frame(self.ui_frame)
 
     def open_batch(self):
+        self.close_frame(self.ui_frame)
         #  Get Batches from DB
         list_var = tk.StringVar(value=db.load_batches(self.DATABASE))
 
@@ -112,14 +120,40 @@ class App:
                         column=0)
 
     def show_selected(self, selection):
-        for widget in self.ui_frame.winfo_children():
-            widget.destroy()
+        self.close_frame(self.ui_frame)
+
         batch = db.get_batch(self.DATABASE, selection)
         open_label = tk.Label(self.ui_frame, text=batch)
-        open_label.grid(row=0, column=0)
+        open_label.grid(row=0, column=0, columnspan=3)
         update_btn = tk.Button(self.ui_frame,
-                               text='Update')
+                               text='Update',
+                               command=lambda: self.update_batch(batch))
         update_btn.grid(row=1, column=0)
+        start_run_btn = tk.Button(self.ui_frame,
+                                  text='Start Run')
+        start_run_btn.grid(row=1, column=1)
+        close_btn = tk.Button(self.ui_frame,
+                              text="Close",
+                              command=lambda: self.close_frame(self.ui_frame))
+        close_btn.grid(row=1, column=2)
+
+    def update_batch(self, batch):
+        self.close_frame(self.ui_frame)
+        update_label = tk.Label(self.ui_frme,
+                                text='Update Batch Info',
+                                bg='white',
+                                padx=10,
+                                pady=10,
+                                font=self.FONT_TITLE_2)
+        update_label.grid(row=0, column=0)
+        
+
+    def start_run(self):
+        pass
+
+    def close_frame(self, frame):
+        for widget in frame.winfo_children():
+            widget.destroy()
 
 
 
