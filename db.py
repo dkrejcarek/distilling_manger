@@ -33,12 +33,12 @@ def is_current_batch(current_batch: str, dbs):
     :param dbs:
     :return:
     """
-    if current_batch == '':
-        print('No open batch, please open a batch')
-        current_batch = open_batch(dbs)
-        return current_batch
-    else:
-        return current_batch
+    # if current_batch == '':
+    #     print('No open batch, please open a batch')
+    #     current_batch = open_batch(dbs)
+    #     return current_batch
+    # else:
+    #     return current_batch
 
 
 def edit_batch_info(current_batch: str, dbs):
@@ -48,7 +48,5 @@ def edit_batch_info(current_batch: str, dbs):
     dbs[current_batch] = temp
     print(dbs[current_batch].final_gravity)
 
-
-print(load_batches('batches.db'))
 
 

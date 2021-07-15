@@ -9,6 +9,7 @@ class Batch(object):
         self.date = date
         self.original_gravity = og
         self.volume = volume
+        self.name = style + '_' + date
         self.final_gravity = 0
         self.abv = 0
         self.run = []
@@ -26,10 +27,9 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
                         total_collected,
                         total_alc))
 
-    def save_data(self, location, *a):
+    def save_data(self, location):
         db = shelve.open(location)
-        name = self.style + '_' + self.date
-        db[name] = self
+        db[self.name] = self
         db.close()
 
     def update_final_gravity(self):
@@ -90,11 +90,26 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
     def calc_collection_totals(self):
         total_collected = 0
         total_alc_collected = 0
-        total_alc = round(self.volume * self.abv, 2)
+        total_alc = round(self.volume * float(self.abv), 2)
 
         for i in range(len(self.run)):
             total_collected += self.run[i][0]
             total_alc_collected += self.run[i][0] * (self.run[i][1] / 100)
 
         return total_collected, total_alc_collected, total_alc
+
+    def update_info(self, location, changes: dict = {}, ):
+        for change in changes.keys():
+            if change == 'style':
+                self.style = changes[change]
+            elif change == 'date':
+                self.date = changes[change]
+            elif change == 'og':
+                self.original_gravity = changes[change]
+            elif change == 'fg':
+                self.final_gravity = changes[change]
+            elif change == 'volume':
+                self.volume = changes[change]
+        self.save_data(location)
+
 
