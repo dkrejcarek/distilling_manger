@@ -3,7 +3,7 @@ from batch import Batch
 import db as db
 
 HEIGHT = 500
-WIDTH = 600
+WIDTH = 1000
 
 
 class App:
@@ -71,12 +71,12 @@ class App:
         original_gravity_input = tk.Entry(self.ui_frame)
         original_gravity_input.grid(row=3, column=1, sticky='ns')
 
-        final_gravity_label = tk.Label(self.ui_frame,
-                                       text="FG: ",
-                                       bg='white')
-        final_gravity_label.grid(row=4, column=0, sticky='ns')
-        final_gravity_input = tk.Entry(self.ui_frame)
-        final_gravity_input.grid(row=4, column=1, sticky='ns')
+        # final_gravity_label = tk.Label(self.ui_frame,
+        #                                text="FG: ",
+        #                                bg='white')
+        # final_gravity_label.grid(row=4, column=0, sticky='ns')
+        # final_gravity_input = tk.Entry(self.ui_frame)
+        # final_gravity_input.grid(row=4, column=1, sticky='ns')
 
         volume_label = tk.Label(self.ui_frame,
                                 text='Vol (L)', bg='white')
@@ -137,7 +137,8 @@ class App:
                                command=lambda: self.get_batch_update(batch))
         update_btn.grid(row=1, column=0)
         start_run_btn = tk.Button(self.ui_frame,
-                                  text='Start Run')
+                                  text='Start Run',
+                                  command=lambda: self.start_run(batch))
         start_run_btn.grid(row=1, column=1)
         close_btn = tk.Button(self.ui_frame,
                               text="Close",
@@ -209,9 +210,6 @@ class App:
                               command=lambda: self.close_frame(self.ui_frame))
         close_btn.grid(row=6, column=1)
 
-    def start_run(self):
-        pass
-
     def close_frame(self, frame):
         for widget in frame.winfo_children():
             widget.destroy()
@@ -236,3 +234,67 @@ class App:
 
         self.show_selected(batch.name)
 
+    def start_run(self, batch):
+        self.close_frame(self.ui_frame)
+
+        head_frame = tk.Frame(self.ui_frame, bg='white')
+        head_frame.grid(row=0, column=0, sticky='news')
+        run_info_frame = tk.Frame(self.ui_frame, bg='white')
+        run_info_frame.grid(row=1, column=0, sticky='news')
+
+        entry_frame = tk.Frame(self.ui_frame, bg='white')
+        entry_frame.grid(row=2, column=0, sticky='news')
+        # Configure columns to take of fill width of parent
+        for i in range(6):
+            run_info_frame.columnconfigure(i, weight=1)
+            entry_frame.columnconfigure(i, weight=1)
+
+        run_label = tk.Label(head_frame,
+                             text='Add Run Data',
+                             bg='white',
+                             font=("Arial", self.FONT_TITLE_2))
+        run_label.grid(row=0, column=0)
+        headers = ("Collected Vol (ml)", "Tralles", "Head Temp",
+                   "Total Collected (ml)", "Alcohol (ml)",
+                   "Alcohol Remaining (L)",)
+
+        for m in range(len(headers)):
+            tk.Label(run_info_frame, text=headers[m], bg='white', width=15).grid(row=0, column=m, sticky='ew')
+
+        # display all the previous runs
+        for l in range(len(batch.run)):
+            for j in range(3):
+                tk.Label(run_info_frame,
+                         text=batch.run[l][j],
+                         bg='white').grid(row=l + 1, column=j)
+            collected = batch.calc_cum_totals(l)
+            for k in range(3):
+                tk.Label(run_info_frame,
+                         text=collected[k],
+                         bg='white').grid(row=l + 1, column=k + 3)
+
+        col_vol_input = tk.Entry(entry_frame, width=15)
+        col_vol_input.grid(row=0, column=0, sticky='ew')
+        tralles_input = tk.Entry(entry_frame, width=15)
+        tralles_input.grid(row=0, column=1, sticky='ew')
+        head_temp_input = tk.Entry(entry_frame, width=15)
+        head_temp_input.grid(row=0, column=2, sticky='ew')
+        for n in range(3, 6):
+            tk.Label(entry_frame, width=15, bg='white').grid(row=0, column=n, sticky='ew')
+
+        add_info_btn = tk.Button(entry_frame,
+                                 text='Add',
+                                 command=lambda: self.add_batch(batch,
+                                                                col_vol_input.get(),
+                                                                tralles_input.get(),
+                                                                head_temp_input.get()))
+        add_info_btn.grid(row=1, column=0)
+        done_btn = tk.Button(entry_frame,
+                             text="Stop Run",
+                             command=lambda: self.close_frame(self.ui_frame))
+        done_btn.grid(row=1, column=1)
+
+    def add_batch(self, batch, volume, tralles, temp):
+        batch.run.append((float(volume), float(tralles), float(temp)))
+        batch.save_data(self.DATABASE)
+        self.start_run(batch)

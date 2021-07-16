@@ -48,20 +48,12 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
         """
         self.abv = round((self.original_gravity - self.final_gravity) * 1.3125, 2)
 
-    def update_run(self):
+    def update_run(self, run_info: tuple):
         """
 
         :return:
         """
-        while True:
-            stop = input("Add run info (Y/N): ")
-            if stop.lower() == 'n':
-                break
-            volume = int(input("Enter Collected Volume (ml): "))
-            tralles = int(input("Enter Tralles: "))
-            head_temp = float(input("Enter head temp: "))
-            self.run.append((volume, tralles, head_temp))
-            self.show_collected_info()
+        self.run.append(run_info)
 
     def start_run(self):
         """
@@ -110,6 +102,22 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
                 self.final_gravity = changes[change]
             elif change == 'volume':
                 self.volume = changes[change]
+
+        self.calc_abv()
+
         self.save_data(location)
+
+    def calc_cum_totals(self, ind):
+        cum_collected = 0
+        cum_alc_collected = 0
+        total_alc = round(self.volume * float(self.abv), 2)
+
+        for i in range(ind):
+            cum_collected += self.run[i][0]
+            cum_alc_collected += self.run[i][0] * (self.run[i][1] / 100)
+
+        alc_remaining = round(total_alc - cum_alc_collected / 1000, 2)
+
+        return (cum_collected, cum_alc_collected, alc_remaining)
 
 
