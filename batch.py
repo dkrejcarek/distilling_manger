@@ -4,15 +4,34 @@ import shelve
 class Batch(object):
     """ Batch of distillate class """
 
-    def __init__(self, style: str, date: str, og: float, volume: float):
-        self.style = style
-        self.date = date
-        self.original_gravity = og
+    def __init__(self):
+        self._style = None
+        self._date = None
+        self._original_gravity = 1.000
         self.volume = volume
         self.name = style + '_' + date
         self.final_gravity = 0
         self.abv = 0
         self.run = []
+		
+	@setter
+	def style(self, style: str):
+		"""Set the Style of the Batch"""
+		self._style = style
+	
+	@setter
+	def date(self, date: str):
+		self._date = date
+	
+	@setter
+	def orgin(self, orginal_gravity: float):
+		"""Set the orginal specific gravity"""
+		self._orginal_gravity = orginal_gravity
+		
+	@setter
+	def volume(self, volume):
+		"""Set the volume in liters"""
+		self._volume = volume
 
     def __str__(self):
         total_collected, total_alc_collected, total_alc = self.calc_collection_totals()
