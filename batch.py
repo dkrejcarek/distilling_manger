@@ -139,4 +139,3 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
 
         return (cum_collected, cum_alc_collected, alc_remaining)
 
-
