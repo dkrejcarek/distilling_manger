@@ -14,21 +14,37 @@ class Batch(object):
         self.abv = 0
         self.run = []
 		
-	@setter
+	@property
+    def style(self):
+        return self._style
+
+    @style.setter
 	def style(self, style: str):
 		"""Set the Style of the Batch"""
 		self._style = style
 	
-	@setter
+    @property
+    def date(self):
+        return self._date
+
+	@date.setter
 	def date(self, date: str):
-		self._date = date
+		return self._date = date
 	
-	@setter
-	def orgin(self, orginal_gravity: float):
+    @property
+    def original_gravity(self):
+        return self._original_gravity
+
+	@original_gravity.setter
+	def original_gravity(self, orginal_gravity: float):
 		"""Set the orginal specific gravity"""
 		self._orginal_gravity = orginal_gravity
-		
-	@setter
+
+    @property
+    def volume (self):
+        return self._volume
+
+	@volume.setter
 	def volume(self, volume):
 		"""Set the volume in liters"""
 		self._volume = volume
@@ -76,7 +92,7 @@ Collected: {}ml; Total Alc Collected: {}ml\n\tTotal Alcohol: {}'
 
     def start_run(self):
         """
-
+        Starts a run to
         :return:
         """
         if not self.final_gravity:
