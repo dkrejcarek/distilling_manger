@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Distilling Manager: Distilling Day{% endblock %}
+
+{% block content %}
+    <!-- Heading Section -->
+    <div class="container">
+
+    </div>
+    <!-- Wash Info Section -->
+    {% include 'wash_info.html' %}
+    <!-- Distilling Summary -->
+        <!-- Foreshots -->
+        <!-- Head Section -->
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <p>Head Temp </p>
+            </div>
+            <div class="col">
+                <p>Collected Vol</p>
+            </div>
+            <div class="col">
+                <p>Alchohol Vol</p>
+            </div>
+            <div class="col">
+                <p>Cum Alc Vol</p>
+            </div>
+            <div class="col">
+                <p>Blended</p>
+            </div>
+        </div>
+        <div class="row">
+            {% for head in heads_info %}
+                {% include 'heads_form.html' %}
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary">Add +</button>
+            </div>
+        </div>
+    </div>
+
+        <!-- Hearts Section -->
+    {% for heart in hearts_info %}
+        {% include 'hearts_form.html' %}
+    {% endfor %}
+        <!-- Tails Section -->
+    {% for tail in tails_info %}
+        {% include 'tails_form.html' %}
+    {% endfor %}
+
+{% endblock %}
